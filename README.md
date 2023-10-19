@@ -1,2 +1,2 @@
 # DIY-Sha256
-Program that hashes messages.  Coded in the Python programming language 
+Program that hashes messages.  Coded in the Python programming language.  This program does not use any functions from the hashlib Python built-in library.  This was a project that I undertook to better understand how the Sha256 algorithm works.  The program consists of a number of fucntions that are designed to manipulate and alter the bits of the message.  These functions are then used in the get_Sha256 function which runs the encryption process of the message. 
