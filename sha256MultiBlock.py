@@ -93,14 +93,12 @@ def addBin(*args):
     decs = [0 for i in wRev]
     
     # Begin the loop.  If bit == "1" dec[i] += m.  With every loop through j (32 for 32 bits) m*= 2.  m reset to 1 after a
-    # full loop through j.
-    m = 1
+    # full loop through j. 
     for i in range(len(decs)):
         for j in range(32):
             if wRev[i][j] == "1":
-                decs[i] += m
-            m *= 2
-        m = 1
+                decs[i] += 2 ** j
+    
     # Return formattted binary for the sum of decs %(2**32) to ensure that the new binary is still comprised of 32 bits
     return format(sum(decs)%(2**32),'032b') 
 
@@ -159,8 +157,6 @@ def get_sha256_hash(txt):
         # Compute the t values.  Beginning of the compression function using the values stored in our message schedule (w)
         # and the values stored in h(converted to binary in hBin) and values in k.
 
-        # u ("updated") contains the updated values for "a" and "e" generated from t1 and t2 in forthcoming t loop.
-        u = []
         # New computed t values stored in this variable.
         finalVals = []
 
@@ -171,9 +167,11 @@ def get_sha256_hash(txt):
                 # Compute t1 and t2 values which are used to produce new "a" and "e" values in each loop
                 t1 = addBin(hB[7],sigmaFinalCompute(hB[4],sigmaShift(hB[4],6),sigmaShift(hB[4],11),sigmaShift(hB[4],25)),ch(hB[4],hB[5],hB[6]),hexToBin(k[t]),w[i][t])
                 t2 = addBin(sigmaFinalCompute(hB[0],sigmaShift(hB[0],2),sigmaShift(hB[0],13),sigmaShift(hB[0],22)),maj(hB[0],hB[1],hB[2]))
-            
+
+                # u ("updated") contains the updated values for "a" and "e" generated from t1 and t2 in forthcoming t loop.
                 u = [addBin(t1,t2), addBin(hB[3],t1)]
-            
+
+                # Computing values a ... h1
                 h1 = hB[6]
                 g = hB[5]
                 f = hB[4]
@@ -197,6 +195,7 @@ def get_sha256_hash(txt):
                 b = a
                 a = u[0]
                 e = u[1]
+
         # Append finalVals with the values a ... h1    
         finalVals.append([a,b,c,d,e,f,g,h1])
         # Generate new hB values
@@ -205,7 +204,7 @@ def get_sha256_hash(txt):
     return "".join(binToHex(i) for i in hB)     
     
 # print(get_sha256_hash("abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq"))
-print(get_sha256_hash("password123")) # ➞ "ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f"
+# print(get_sha256_hash("password123")) # ➞ "ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f"
 # print(get_sha256_hash("Fluffy@home")) # ➞ "dcc1ac3a7148a2d9f47b7dbe3d733040c335b2a3d8adc7984e0c483c5b2c1665"
 # print(get_sha256_hash("Hey dude!")) # ➞ "14f997f08b8ad032dcb274198684f995d34043f9da00acd904dc72836359ae0f"
 # print(get_sha256_hash("abc"))
