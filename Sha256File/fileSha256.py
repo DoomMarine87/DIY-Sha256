@@ -19,10 +19,10 @@ while True:
             break
 
 
+#Use imported hashlib module to test the above program
 import hashlib
- 
-filename = input("Enter the input file name: ")
-with open(filename,"rb") as f:
-    bytes = f.read() # read entire file as bytes
+
+with open(file,"rb") as f:
+    bytes = f.read()
     readable_hash = hashlib.sha256(bytes).hexdigest()
     print(readable_hash)
